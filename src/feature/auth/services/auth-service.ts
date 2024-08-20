@@ -3,17 +3,11 @@ import { LoginInputModel } from '../api/pipes/login-input-model';
 import { HashPasswordService } from '../../../common/service/hash-password-service';
 import { TokenJwtService } from '../../../common/service/token-jwt-service';
 import { RegistrationInputModel } from '../api/pipes/registration-input-model';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { v4 as randomCode } from 'uuid';
 import { add } from 'date-fns';
 import { EmailSendService } from '../../../common/service/email-send-service';
 import { RegistrationConfirmationInputModel } from '../api/pipes/registration-comfirmation-input-model';
 import { NewPasswordInputModel } from '../api/pipes/new-password-input-model';
-import {
-  SecurityDevice,
-  SecurityDeviceDocument,
-} from '../../security-device/domains/domain-security-device';
 import { Request } from 'express';
 import { CreateUser, CreateUserWithId } from '../../users/api/types/dto';
 import { UserSqlTypeormRepository } from '../../users/repositories/user-sql-typeorm-repository';
@@ -27,8 +21,6 @@ export class AuthService {
     protected hashPasswordService: HashPasswordService,
     protected tokenJwtService: TokenJwtService,
     protected emailSendService: EmailSendService,
-    @InjectModel(SecurityDevice.name)
-    private securityDeviceModel: Model<SecurityDeviceDocument>,
     protected userSqlTypeormRepository: UserSqlTypeormRepository,
     protected securityDeviceSqlTypeormRepository: SecurityDeviceSqlTypeormRepository,
   ) {}

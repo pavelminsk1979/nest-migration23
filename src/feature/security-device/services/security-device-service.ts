@@ -3,9 +3,6 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { SecurityDeviceRepository } from '../repositories/security-device-repository';
-import { SecurityDeviceSqlRepository } from '../repositories/security-device-sql-repository';
-import { SecurityDeviceSqlQueryRepository } from '../repositories/security-device-sql-query-repository';
 import { SecurityDeviceSqlTypeormRepository } from '../repositories/security-device-sql-typeorm-repository';
 import { Securitydevicetyp } from '../domains/securitydevicetype.entity';
 

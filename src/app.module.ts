@@ -19,15 +19,9 @@ import configuration, { ConfigurationType } from './settings/env-configuration';
 import { CommentService } from './feature/comments/services/comment-service';
 import { AuthTokenGuard } from './common/guard/auth-token-guard';
 import { DataUserExtractorFromTokenGuard } from './common/guard/data-user-extractor-from-token-guard';
-import {
-  SecurityDevice,
-  SecurityDeviceShema,
-} from './feature/security-device/domains/domain-security-device';
-import { SecurityDeviceRepository } from './feature/security-device/repositories/security-device-repository';
 import { RefreshTokenGuard } from './common/guard/refresh-token-guard';
 import { SecurityDeviceController } from './feature/security-device/api/security-device-controller';
 import { SecurityDeviceService } from './feature/security-device/services/security-device-service';
-import { SecurityDeviceQueryRepository } from './feature/security-device/repositories/security-device-query-repository';
 import { VisitLimitGuard } from './common/guard/visit-limit-guard';
 import {
   LimitVisit,
@@ -36,9 +30,7 @@ import {
 import { LimitVisitService } from './feature/visit-limit/services/limit-visit-service';
 import { LimitVisitRepository } from './feature/visit-limit/repositories/limit-visit-repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SecurityDeviceSqlRepository } from './feature/security-device/repositories/security-device-sql-repository';
 import { UserQuerySqlRepository } from './feature/users/repositories/user-query-sql-repository';
-import { SecurityDeviceSqlQueryRepository } from './feature/security-device/repositories/security-device-sql-query-repository';
 import { SaBlogController } from './feature/blogs/api/sa-blog-controller';
 import { Usertyp } from './feature/users/domains/usertyp.entity';
 import { Securitydevicetyp } from './feature/security-device/domains/securitydevicetype.entity';
@@ -61,31 +53,12 @@ import { BlogService } from './feature/blogs/services/blog-service';
 
 dotenv.config();
 
-/*декоратора @Module()---ЭТО КАК В ЭКСПРЕС КОМПОЗИШЕН-РУУТ..
-в NestJS используются для организации
-компонентов, контроллеров и сервисов в единое логическое целое.
-  ---imports: Это массив других модулей, которые должны
-быть импортированы в текущий модуль.Здесь вы можете указать модули,
-которые предоставляют функциональность, необходимую для работы
-компонентов и сервисов текущего модуля
-  ---controllers: Это массив контроллеров, которые находятся
-   в этом модуле. Контроллеры в NestJS отвечают за
-   обработку HTTP-запросов и определение маршрутов.
-    ---- providers: Это массив провайдеров, которые будут
-     доступны в этом модуле. Провайдеры в NestJS отвечают
-      за создание экземпляров сервисов и предоставление
-      их внедрению зависимостей.   */
 @Module({
   imports: [
     CqrsModule,
     ConfigModule.forRoot({
-      /*   тут указание что модуль регистрируется
-      глобально и доступен всему проекту */
       isGlobal: true,
-      /* load- настройка в которой указано
-      где сама конфигурация
-       configuration это функция в которой прописана
-      конфигурация */
+
       load: [configuration],
     }),
     TypeOrmModule.forRoot({
@@ -109,77 +82,12 @@ dotenv.config();
       LikeStatusForCommentTyp,
     ]),
 
-    /*    --------type: 'postgres',    определяет  базу данных
-    к которой подключаюсь
-    .........далее в pgAdmin   Servers->PostgreSQL->правой кнопкой
-    мыши->Properties->Connection----- и от сюда надо
-    значения перенести
-    ----------host: 'localhost',
-      ----------port: 5432,
-      ----------username: 'postgres',
-    
-      --------password: 'jjjj',------далее ПАРОЛЬ еще когда настраивал
-    базу данных- его создавал
-    
-    ---------database: 'typeOrmDatabase', название подбазыДанных
-    в базе postgres       уже внутри typeOrmDatabase будут
-    таблицы содержатся    И СОЗДАТЬ БАЗУ(подбазу)ДАННЫХ
-    НАДО РУКАМИ   В    pgAdmin
-    
-    -----  autoLoadEntities: true, использовать чтоб ненадобыло
-    перечислять вручную все cущности-классы- таблицы
-    Там где декоратор @Entity будет те и добавит
-    
-    ------synchronize: true,  когда в коде пропишу миграцию
-    и СОХРАНЮ-- тогда и запрос автоматом в базу
-    данных пойдет по изменениям (МИГРАЦИЯ- это
-    добавление колонок в таблице или изменения какието)
-    В ДАЛЬНЕЙШЕМ ЭТО СВОЙСТВО ИЗМЕНИМ НА БОЛЕЕ ЛУЧШЕЕ
-    
-    ---  logging: ['query'],  это свойство в Terminal
-    будет прописывать запрос к sql
-    
-    ------ TypeOrmModule.forFeature([]),---здесь регистрирую
-    все entity, через запятую
-    НО ЧАТ ГПТ НАПИСАЛ СЛЕДУЮЩЕЕ____------Если вы уже
-    используете autoLoadEntities: true и все ваши сущности
-    помечены декоратором @Entity, то использование
-    TypeOrmModule.forFeature([]) может быть избыточным.
-      В таком случае система сама загрузит все необходимые
-    сущности из вашего приложения.
-    
-      Таким образом, если вы уже используете autoLoadEntities: true
-    и все ваши сущности правильно помечены декоратором
-    @Entity, вы можете не использовать явное перечисление
-    сущностей через TypeOrmModule.forFeature([]), так как
-    они будут автоматически загружены.
-    --------ПОЭТОМУ УБИРАЮ TypeOrmModule.forFeature([])*/
-
-    /////////////////////////////////////////////////
-
-    ////////////////////////////////////////////
-
-    /*   метод forRootAsync, предоставляемый модулем
-    MongooseModule из @nestjs/mongoose  используется для асинхронной
-    инициализации   подключения к MongoDB, в отличие от синхронного
-    MongooseModule.forRoot()*/
     MongooseModule.forRootAsync({
-      /* configService---В приведенном примере, ConfigService
-      используется для получения настроек из конфигурационного
-      объекта, который был определен ранее в приложении
-      в файле  env-configuration*/
       useFactory: (configService: ConfigService<ConfigurationType, true>) => {
-        /*Метод get() используется для получения
-        значений из конфигурационного объекта*/
         const environmentSettings = configService.get(
           'environmentSettings',
 
-          {
-            /* { infer: true } - это опция, которая указывает
-           ConfigService автоматически определять тип 
-           возвращаемого значения*/
-            infer: true,
-          },
+          { infer: true },
         );
 
         const databaseSettings = configService.get('databaseSettings', {
@@ -190,65 +98,15 @@ dotenv.config();
           ? databaseSettings.MONGO_CONNECTION_URI_FOR_TESTS
           : databaseSettings.MONGO_CONNECTION_URI;
 
-        /*возвращает объект с настройками подключения к MongoDB,
-          который будет использоваться модулем MongooseModule*/
         return {
           uri: uri,
         };
       },
-      /* Этот параметр указывает, что ConfigService должен быть внедрен 
-       в фабричную функцию, чтобы она могла получить 
-       доступ к экземпляру ConfigService*/
+
       inject: [ConfigService],
     }),
 
-    /*   ///////////////////////////////////////////////////
-
-    /!*   метод forRootAsync, предоставляемый модулем
-  MongooseModule из @nestjs/mongoose  используется для асинхронной
-  инициализации   подключения к MongoDB, в отличие от синхронного
-       MongooseModule.forRoot().*!/
-    MongooseModule.forRootAsync({
-      /!*  Здесь мы импортируем ConfigModule, который
-     предоставляет возможность использовать ConfigService
-      для получения значений конфигурации.
-      Это необходимо, чтобы ConfigService был доступен внутри
-      useFactory функции.*!/
-      useFactory: (configService: ConfigService<ConfigurationType, true>) => ({
-        uri: configService.get<string>('databaseSettings.MONGO_CONNECTION_URI'),
-      }),
-      inject: [ConfigService],
-    }),
-
-    /////////////////////////////////////////////////////*/
-
-    /*  /////////////////////////////////////////////
-      MongooseModule.forRootAsync({
-        useFactory: (configService: ConfigService<ConfigurationType, true>) => {
-          const environmentSettings = configService.get('environmentSettings', {
-            infer: true,
-          });
-          const databaseSettings = configService.get('databaseSettings', {
-            infer: true,
-          });
-  
-          const uri = environmentSettings.isTesting
-            ? databaseSettings.MONGO_CONNECTION_URI_FOR_TESTS
-            : databaseSettings.MONGO_CONNECTION_URI;
-          console.log(uri);
-  
-          return {
-            uri: uri,
-          };
-        },
-        inject: [ConfigService],
-      }),
-      
-      /////////////////////////////////////////////////////////*/
-    //...
-    /*тут регистрация СХЕМЫ монгусовской модельки*/
     MongooseModule.forFeature([
-      { name: SecurityDevice.name, schema: SecurityDeviceShema },
       { name: LimitVisit.name, schema: LimitVisitSchema },
     ]),
   ],
@@ -274,16 +132,12 @@ dotenv.config();
     CommentService,
     AuthTokenGuard,
     DataUserExtractorFromTokenGuard,
-    SecurityDeviceRepository,
     RefreshTokenGuard,
     SecurityDeviceService,
-    SecurityDeviceQueryRepository,
     VisitLimitGuard,
     LimitVisitService,
     LimitVisitRepository,
-    SecurityDeviceSqlRepository,
     UserQuerySqlRepository,
-    SecurityDeviceSqlQueryRepository,
     UserSqlTypeormRepository,
     SecurityDeviceSqlTypeormRepository,
     BlogSqlTypeormRepository,
@@ -297,8 +151,4 @@ dotenv.config();
     BlogService,
   ],
 })
-/*export class AppModule {} в данном контексте
-представляет сам модуль. То что собрано -сконфигурировано
-выше--это и есть МОДУЛЬ и это как часть чегото, и часть
-эту можно как npm-пакет кудато вставить-добавить*/
 export class AppModule {}
