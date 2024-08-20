@@ -8,7 +8,6 @@ import { UserQueryRepository } from './feature/users/repositories/user-query-rep
 import { BlogController } from './feature/blogs/api/blog-controller';
 import { Blog, BlogShema } from './feature/blogs/domains/domain-blog';
 import { BlogRepository } from './feature/blogs/repositories/blog-repository';
-import { CreateBlogService } from './feature/blogs/services/create-blog-service';
 import { BlogQueryRepository } from './feature/blogs/repositories/blog-query-repository';
 import { Post, PostShema } from './feature/posts/domains/domain-post';
 import { PostRepository } from './feature/posts/repositories/post-repository';
@@ -96,6 +95,7 @@ import { CommentSqlTypeormRepository } from './feature/comments/reposetories/com
 import { CommentQuerySqlTypeormRepository } from './feature/comments/reposetories/comment-query-sql-typeorm-repository';
 import { LikeStatusForCommentTyp } from './feature/like-status-for-comment/domain/typ-like-status-for-comment.entity';
 import { TypLikeStatusForCommentSqlRepository } from './feature/like-status-for-comment/repositories/typ-like-status-for-comment-sql-repository';
+import { BlogService } from './feature/blogs/services/blog-service';
 
 dotenv.config();
 
@@ -316,7 +316,6 @@ dotenv.config();
     UsersService,
     UsersRepository,
     UserQueryRepository,
-    CreateBlogService,
     BlogRepository,
     BlogQueryRepository,
     PostRepository,
@@ -366,6 +365,7 @@ dotenv.config();
     CommentSqlTypeormRepository,
     CommentQuerySqlTypeormRepository,
     TypLikeStatusForCommentSqlRepository,
+    BlogService,
   ],
 })
 /*export class AppModule {} в данном контексте

@@ -1,20 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBlogInputModel } from '../api/pipes/create-blog-input-model';
-import { CommandHandler } from '@nestjs/cqrs';
 import { CreateBlog } from '../api/types/dto';
 import { BlogSqlTypeormRepository } from '../repositories/blog-sql-typeorm-repository';
 
-export class CreateBlogCommand {
-  constructor(public createBlogInputModel: CreateBlogInputModel) {}
-}
-
-@CommandHandler(CreateBlogCommand)
 @Injectable()
-export class CreateBlogService {
+export class BlogService {
   constructor(protected blogSqlTypeormRepository: BlogSqlTypeormRepository) {}
 
-  async execute(command: CreateBlogCommand) {
-    const { name, websiteUrl, description } = command.createBlogInputModel;
+  async createBlog(createBlogInputModel: CreateBlogInputModel) {
+    const { name, websiteUrl, description } = createBlogInputModel;
 
     const newBlog: CreateBlog = {
       name,

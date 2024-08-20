@@ -20,7 +20,6 @@ import { CreatePostForBlogInputModel } from './pipes/create-post-for-blog-input-
 import { DeleteBlogByIdCommand } from '../services/delete-blog-by-id-service';
 import { UpdateBlogCommand } from '../services/update-blog-service';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateBlogCommand } from '../services/create-blog-service';
 import { AuthGuard } from '../../../common/guard/auth-guard';
 import { QueryParamsInputModel } from '../../../common/pipes/query-params-input-model';
 import { BlogQuerySqlRepository } from '../repositories/blog-query-sql-repository';
@@ -29,37 +28,25 @@ import { PostService } from '../../posts/services/post-service';
 import { BlogQuerySqlTypeormRepository } from '../repositories/blog-query-sql-typeorm-repository';
 import { PostQuerySqlTypeormRepository } from '../../posts/repositories/post-query-sql-typeorm-repository';
 import { DataUserExtractorFromTokenGuard } from '../../../common/guard/data-user-extractor-from-token-guard';
+import { BlogService } from '../services/blog-service';
 
 @Controller('sa/blogs')
 export class SaBlogController {
   constructor(
-    /*это sqrs и service разбит на подчасти
-     * и в каждой отдельный метод
-     * конспект 1501*/
     protected commandBus: CommandBus,
     protected blogQuerySqlRepository: BlogQuerySqlRepository,
     protected postService: PostService,
     protected blogQuerySqlTypeormRepository: BlogQuerySqlTypeormRepository,
     protected postQuerySqlTypeormRepository: PostQuerySqlTypeormRepository,
+    protected blogService: BlogService,
   ) {}
 
-  /*Nest.js автоматически возвращает следующие
-  HTTP-статус коды по умолчанию:
-  post 201,get 200, delete 200, put 200
-  ....
-  а ошибки по умолчанию
-  post 400,get 404, delete 404, put 400*/
-
   @UseGuards(AuthGuard)
-  /*@HttpCode(HttpStatus.CREATED) необязательно
-   * ибо метод пост поумолчанию HTTP-статус 201 */
   @Post()
   async createBlog(
     @Body() createBlogInputModel: CreateBlogInputModel,
   ): Promise<ViewBlog> {
-    const blogId = await this.commandBus.execute(
-      new CreateBlogCommand(createBlogInputModel),
-    );
+    const blogId = await this.blogService.createBlog(createBlogInputModel);
 
     if (!blogId) {
       throw new NotFoundException(
@@ -213,38 +200,6 @@ export class SaBlogController {
       );
     }
   }
-
-  /* @UseGuards(AuthGuard, DataUserExtractorFromTokenGuard)
-   @Get(':blogId/posts')
-   async getPostsForBlog(
-     @Param('blogId') blogId: string,
-     @Query() queryParamsPostForBlogInputModel: QueryParamsInputModel,
-     @Req() request: Request,
-   ): Promise<ViewModelWithArrayPosts> {
-     /!*Айдишка пользователя нужна для-- когда
-     отдадим ответ в нем дудет информация 
-     о том какой статус учтановил данный пользователь
-     который этот запрос делает *!/
- 
-     const userId: string | null = request['userId'];
- 
-     //вернуть все posts(массив) для корректного блога
-     //и у каждого поста  будут данные о лайках
- 
-     const posts = await this.postQuerySqlRepository.getPostsByCorrectBlogId(
-       userId,
-       blogId,
-       queryParamsPostForBlogInputModel,
-     );
- 
-     if (posts) {
-       return posts;
-     } else {
-       throw new NotFoundException(
-         'blog  is not exists  ' + ':method-get,url -blogs/:blogId /posts',
-       );
-     }
-   }*/
 
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
