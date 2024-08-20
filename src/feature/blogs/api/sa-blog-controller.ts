@@ -17,9 +17,6 @@ import { ViewBlog } from './types/views';
 import { ViewModelWithArrayPosts } from '../../posts/api/types/views';
 import { CreateBlogInputModel } from './pipes/create-blog-input-model';
 import { CreatePostForBlogInputModel } from './pipes/create-post-for-blog-input-model';
-import { DeleteBlogByIdCommand } from '../services/delete-blog-by-id-service';
-import { UpdateBlogCommand } from '../services/update-blog-service';
-import { CommandBus } from '@nestjs/cqrs';
 import { AuthGuard } from '../../../common/guard/auth-guard';
 import { QueryParamsInputModel } from '../../../common/pipes/query-params-input-model';
 import { BlogQuerySqlRepository } from '../repositories/blog-query-sql-repository';
@@ -33,7 +30,6 @@ import { BlogService } from '../services/blog-service';
 @Controller('sa/blogs')
 export class SaBlogController {
   constructor(
-    protected commandBus: CommandBus,
     protected blogQuerySqlRepository: BlogQuerySqlRepository,
     protected postService: PostService,
     protected blogQuerySqlTypeormRepository: BlogQuerySqlTypeormRepository,
@@ -88,9 +84,8 @@ export class SaBlogController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async deleteBlogById(@Param('id') blogId: string) {
-    const isDeleteBlogById: boolean | null = await this.commandBus.execute(
-      new DeleteBlogByIdCommand(blogId),
-    );
+    const isDeleteBlogById: boolean | null =
+      await this.blogService.deleteBlogById(blogId);
 
     if (isDeleteBlogById) {
       return;
@@ -108,8 +103,9 @@ export class SaBlogController {
     @Param('id') bologId: string,
     @Body() updateBlogInputModel: CreateBlogInputModel,
   ) {
-    const isUpdateBlog = await this.commandBus.execute(
-      new UpdateBlogCommand(bologId, updateBlogInputModel),
+    const isUpdateBlog = await this.blogService.updateBlog(
+      bologId,
+      updateBlogInputModel,
     );
 
     if (isUpdateBlog) {

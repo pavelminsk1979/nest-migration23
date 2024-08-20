@@ -20,4 +20,15 @@ export class BlogService {
 
     return this.blogSqlTypeormRepository.createNewBlog(newBlog);
   }
+
+  async deleteBlogById(blogId: string) {
+    return this.blogSqlTypeormRepository.deleteBlogById(blogId);
+  }
+
+  async updateBlog(blogId: string, updateBlogInputModel: CreateBlogInputModel) {
+    return this.blogSqlTypeormRepository.updateBlog(
+      blogId,
+      updateBlogInputModel,
+    );
+  }
 }

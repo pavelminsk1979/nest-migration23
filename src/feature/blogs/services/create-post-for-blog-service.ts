@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlogDocument } from '../domains/domain-blog';
 import { Post, PostDocument } from '../../posts/domains/domain-post';
 import { CreatePostForBlogInputModel } from '../api/pipes/create-post-for-blog-input-model';
 import { CommandHandler } from '@nestjs/cqrs';
