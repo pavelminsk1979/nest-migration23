@@ -1,7 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostDocument } from '../domains/domain-post';
 import { QueryParamsInputModel } from '../../../common/pipes/query-params-input-model';
 import { LikeStatus } from '../../../common/types';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
@@ -23,7 +20,6 @@ import { LikeStatusForPostTyp } from '../../like-status-for-post/domain/typ-like
  возможно внедрить как зависимость*/
 export class PostQuerySqlTypeormRepository {
   constructor(
-    @InjectModel(Post.name) private postModel: Model<PostDocument>,
     @InjectDataSource() protected dataSource: DataSource,
     @InjectRepository(Posttyp)
     private readonly posttypRepository: Repository<Posttyp>,

@@ -6,9 +6,6 @@ import { UsersRepository } from './feature/users/repositories/user-repository';
 import { User, UserSchema } from './feature/users/domains/domain-user';
 import { UserQueryRepository } from './feature/users/repositories/user-query-repository';
 import { BlogController } from './feature/blogs/api/blog-controller';
-import { Post, PostShema } from './feature/posts/domains/domain-post';
-import { PostRepository } from './feature/posts/repositories/post-repository';
-import { PostQueryRepository } from './feature/posts/repositories/post-query-repository';
 import { PostService } from './feature/posts/services/post-service';
 import { PostsController } from './feature/posts/api/post-controller';
 import { CommentQueryRepository } from './feature/comments/reposetories/comment-query-repository';
@@ -62,8 +59,6 @@ import { UsersSqlRepository } from './feature/users/repositories/user-sql-reposi
 import { SecurityDeviceSqlRepository } from './feature/security-device/repositories/security-device-sql-repository';
 import { UserQuerySqlRepository } from './feature/users/repositories/user-query-sql-repository';
 import { SecurityDeviceSqlQueryRepository } from './feature/security-device/repositories/security-device-sql-query-repository';
-import { PostSqlRepository } from './feature/posts/repositories/post-sql-repository';
-import { PostQuerySqlRepository } from './feature/posts/repositories/post-query-sql-repository';
 import { SaBlogController } from './feature/blogs/api/sa-blog-controller';
 import { CommentSqlRepository } from './feature/comments/reposetories/comment-sql-repository';
 import { CommentQuerySqlRepository } from './feature/comments/reposetories/comment-query-sql-repository';
@@ -283,7 +278,6 @@ dotenv.config();
         schema: UserSchema,
       },
 
-      { name: Post.name, schema: PostShema },
       { name: Comment.name, schema: CommentShema },
       { name: LikeStatusForPost.name, schema: LikeStatusForPostShema },
       { name: LikeStatusForComment.name, schema: LikeStatusForCommentShema },
@@ -307,8 +301,6 @@ dotenv.config();
     UsersService,
     UsersRepository,
     UserQueryRepository,
-    PostRepository,
-    PostQueryRepository,
     PostService,
     CommentQueryRepository,
     HashPasswordService,
@@ -332,8 +324,6 @@ dotenv.config();
     SecurityDeviceSqlRepository,
     UserQuerySqlRepository,
     SecurityDeviceSqlQueryRepository,
-    PostSqlRepository,
-    PostQuerySqlRepository,
     CommentSqlRepository,
     CommentQuerySqlRepository,
     LikeStatusForCommentSqlRepository,

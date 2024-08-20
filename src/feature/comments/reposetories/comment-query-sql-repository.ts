@@ -12,7 +12,7 @@ import { DataSource } from 'typeorm';
 import { LikeStatusForCommentSqlRepository } from '../../like-status-for-comment/repositories/like-status-for-comment-sql-repository';
 import { LikeStatusForCommentCreateWithId } from '../../like-status-for-comment/types/dto';
 import { CreateCommentWithId } from '../api/types/dto';
-import { PostSqlRepository } from '../../posts/repositories/post-sql-repository';
+import { PostSqlTypeormRepository } from '../../posts/repositories/post-sql-typeorm-repository';
 
 @Injectable()
 export class CommentQuerySqlRepository {
@@ -20,7 +20,7 @@ export class CommentQuerySqlRepository {
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
     @InjectDataSource() protected dataSource: DataSource,
     protected likeStatusForCommentSqlRepository: LikeStatusForCommentSqlRepository,
-    protected postSqlRepository: PostSqlRepository,
+    protected postSqlTypeormRepository: PostSqlTypeormRepository,
   ) {}
 
   async getCommentById(userId: string | null, commentId: string) {
@@ -123,7 +123,7 @@ WHERE c.id = $1
   ) {
     //проверить существует ли такой ПОСТ
 
-    const post = await this.postSqlRepository.getPost(postId);
+    const post = await this.postSqlTypeormRepository.getPostById(postId);
 
     if (!post) return null;
 

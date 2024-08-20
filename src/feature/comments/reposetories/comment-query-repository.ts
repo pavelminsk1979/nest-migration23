@@ -7,14 +7,14 @@ import { QueryParamsInputModel } from '../../../common/pipes/query-params-input-
 import { LikeStatus } from '../../../common/types';
 import { LikeStatusForCommentDocument } from '../../like-status-for-comment/domain/domain-like-status-for-comment';
 import { LikeStatusForCommentRepository } from '../../like-status-for-comment/repositories/like-status-for-comment-repository';
-import { PostRepository } from '../../posts/repositories/post-repository';
+import { PostSqlTypeormRepository } from '../../posts/repositories/post-sql-typeorm-repository';
 
 @Injectable()
 export class CommentQueryRepository {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
     protected likeStatusForCommentRepository: LikeStatusForCommentRepository,
-    protected postRepository: PostRepository,
+    protected postSqlTypeormRepository: PostSqlTypeormRepository,
   ) {}
 
   async getComments(
@@ -24,7 +24,7 @@ export class CommentQueryRepository {
   ) {
     //проверить существует ли такой ПОСТ
 
-    const post = await this.postRepository.getPostById(postId);
+    const post = await this.postSqlTypeormRepository.getPostById(postId);
 
     if (!post) return null;
 
