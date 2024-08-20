@@ -1,11 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { LikeStatus } from '../../../common/types';
-import {
-  LikeStatusForComment,
-  LikeStatusForCommentDocument,
-} from '../../like-status-for-comment/domain/domain-like-status-for-comment';
 import { CreateCommentTyp } from '../api/types/dto';
 import { LikeStatusForCommentCreateTyp } from '../../like-status-for-comment/types/dto';
 import { PostSqlTypeormRepository } from '../../posts/repositories/post-sql-typeorm-repository';
@@ -25,8 +19,6 @@ import { TypLikeStatusForCommentSqlRepository } from '../../like-status-for-comm
  возможно внедрить как зависимость*/
 export class CommentService {
   constructor(
-    @InjectModel(LikeStatusForComment.name)
-    private likeStatusModelForComment: Model<LikeStatusForCommentDocument>,
     protected postSqlTypeormRepository: PostSqlTypeormRepository,
     protected userSqlTypeormRepository: UserSqlTypeormRepository,
     protected commentSqlTypeormRepository: CommentSqlTypeormRepository,

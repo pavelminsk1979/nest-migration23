@@ -1,12 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { CreatePostInputModel } from '../api/pipes/create-post-input-model';
 import { LikeStatus } from '../../../common/types';
-import {
-  LikeStatusForPost,
-  LikeStatusForPostDocument,
-} from '../../like-status-for-post/domain/domain-like-status-for-post';
 import { UpdatePostForCorrectBlogInputModel } from '../api/pipes/update-post-for-correct-blog-input-model';
 import { Blogtyp } from '../../blogs/domains/blogtyp.entity';
 import { BlogSqlTypeormRepository } from '../../blogs/repositories/blog-sql-typeorm-repository';
@@ -26,8 +20,6 @@ import { UserSqlTypeormRepository } from '../../users/repositories/user-sql-type
  возможно внедрить как зависимость*/
 export class PostService {
   constructor(
-    @InjectModel(LikeStatusForPost.name)
-    protected likeStatusModelForPost: Model<LikeStatusForPostDocument>,
     protected blogSqlTypeormRepository: BlogSqlTypeormRepository,
     protected postSqlTypeormRepository: PostSqlTypeormRepository,
     protected likeStatusForPostSqlTypeormRepository: LikeStatusForPostSqlTypeormRepository,

@@ -21,16 +21,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration, { ConfigurationType } from './settings/env-configuration';
 import { CommentService } from './feature/comments/services/comment-service';
 import { AuthTokenGuard } from './common/guard/auth-token-guard';
-import {
-  LikeStatusForPost,
-  LikeStatusForPostShema,
-} from './feature/like-status-for-post/domain/domain-like-status-for-post';
-import { LikeStatusForPostRepository } from './feature/like-status-for-post/repositories/like-status-for-post-repository';
-import {
-  LikeStatusForComment,
-  LikeStatusForCommentShema,
-} from './feature/like-status-for-comment/domain/domain-like-status-for-comment';
-import { LikeStatusForCommentRepository } from './feature/like-status-for-comment/repositories/like-status-for-comment-repository';
 import { DataUserExtractorFromTokenGuard } from './common/guard/data-user-extractor-from-token-guard';
 import {
   SecurityDevice,
@@ -54,8 +44,6 @@ import { SecurityDeviceSqlRepository } from './feature/security-device/repositor
 import { UserQuerySqlRepository } from './feature/users/repositories/user-query-sql-repository';
 import { SecurityDeviceSqlQueryRepository } from './feature/security-device/repositories/security-device-sql-query-repository';
 import { SaBlogController } from './feature/blogs/api/sa-blog-controller';
-import { LikeStatusForCommentSqlRepository } from './feature/like-status-for-comment/repositories/like-status-for-comment-sql-repository';
-import { LikeStatusForPostSqlRepository } from './feature/like-status-for-post/repositories/like-status-for-post-sql-repository';
 import { Usertyp } from './feature/users/domains/usertyp.entity';
 import { Securitydevicetyp } from './feature/security-device/domains/securitydevicetype.entity';
 import { UserSqlTypeormRepository } from './feature/users/repositories/user-sql-typeorm-repository';
@@ -269,8 +257,6 @@ dotenv.config();
         name: User.name,
         schema: UserSchema,
       },
-      { name: LikeStatusForPost.name, schema: LikeStatusForPostShema },
-      { name: LikeStatusForComment.name, schema: LikeStatusForCommentShema },
       { name: SecurityDevice.name, schema: SecurityDeviceShema },
       { name: LimitVisit.name, schema: LimitVisitSchema },
     ]),
@@ -299,8 +285,6 @@ dotenv.config();
     CommentService,
     AuthTokenGuard,
     DataUserExtractorFromTokenGuard,
-    LikeStatusForPostRepository,
-    LikeStatusForCommentRepository,
     SecurityDeviceRepository,
     RefreshTokenGuard,
     SecurityDeviceService,
@@ -312,8 +296,6 @@ dotenv.config();
     SecurityDeviceSqlRepository,
     UserQuerySqlRepository,
     SecurityDeviceSqlQueryRepository,
-    LikeStatusForCommentSqlRepository,
-    LikeStatusForPostSqlRepository,
     UserSqlTypeormRepository,
     SecurityDeviceSqlTypeormRepository,
     BlogSqlTypeormRepository,
