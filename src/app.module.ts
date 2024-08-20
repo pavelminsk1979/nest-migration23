@@ -2,9 +2,6 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersController } from './feature/users/api/user-controller';
 import { UsersService } from './feature/users/services/user-service';
-import { UsersRepository } from './feature/users/repositories/user-repository';
-import { User, UserSchema } from './feature/users/domains/domain-user';
-import { UserQueryRepository } from './feature/users/repositories/user-query-repository';
 import { BlogController } from './feature/blogs/api/blog-controller';
 import { PostService } from './feature/posts/services/post-service';
 import { PostsController } from './feature/posts/api/post-controller';
@@ -39,7 +36,6 @@ import {
 import { LimitVisitService } from './feature/visit-limit/services/limit-visit-service';
 import { LimitVisitRepository } from './feature/visit-limit/repositories/limit-visit-repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersSqlRepository } from './feature/users/repositories/user-sql-repository';
 import { SecurityDeviceSqlRepository } from './feature/security-device/repositories/security-device-sql-repository';
 import { UserQuerySqlRepository } from './feature/users/repositories/user-query-sql-repository';
 import { SecurityDeviceSqlQueryRepository } from './feature/security-device/repositories/security-device-sql-query-repository';
@@ -252,11 +248,6 @@ dotenv.config();
     //...
     /*тут регистрация СХЕМЫ монгусовской модельки*/
     MongooseModule.forFeature([
-      {
-        /*--User.name  у класса(не у экземпляра класса) берут имя оно будет примерно такое -- 'user'*/
-        name: User.name,
-        schema: UserSchema,
-      },
       { name: SecurityDevice.name, schema: SecurityDeviceShema },
       { name: LimitVisit.name, schema: LimitVisitSchema },
     ]),
@@ -275,8 +266,6 @@ dotenv.config();
   /* все сервисы приложения должны тут добавлены */
   providers: [
     UsersService,
-    UsersRepository,
-    UserQueryRepository,
     PostService,
     HashPasswordService,
     AuthService,
@@ -292,7 +281,6 @@ dotenv.config();
     VisitLimitGuard,
     LimitVisitService,
     LimitVisitRepository,
-    UsersSqlRepository,
     SecurityDeviceSqlRepository,
     UserQuerySqlRepository,
     SecurityDeviceSqlQueryRepository,

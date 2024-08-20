@@ -1,7 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { LoginInputModel } from '../api/pipes/login-input-model';
-import { UsersRepository } from '../../users/repositories/user-repository';
-import { User, UserDocument } from '../../users/domains/domain-user';
 import { HashPasswordService } from '../../../common/service/hash-password-service';
 import { TokenJwtService } from '../../../common/service/token-jwt-service';
 import { RegistrationInputModel } from '../api/pipes/registration-input-model';
@@ -16,11 +14,8 @@ import {
   SecurityDevice,
   SecurityDeviceDocument,
 } from '../../security-device/domains/domain-security-device';
-import { SecurityDeviceRepository } from '../../security-device/repositories/security-device-repository';
 import { Request } from 'express';
-import { UsersSqlRepository } from '../../users/repositories/user-sql-repository';
 import { CreateUser, CreateUserWithId } from '../../users/api/types/dto';
-import { SecurityDeviceSqlRepository } from '../../security-device/repositories/security-device-sql-repository';
 import { UserSqlTypeormRepository } from '../../users/repositories/user-sql-typeorm-repository';
 import { Securitydevicetyp } from '../../security-device/domains/securitydevicetype.entity';
 import { SecurityDeviceSqlTypeormRepository } from '../../security-device/repositories/security-device-sql-typeorm-repository';
@@ -29,16 +24,11 @@ import { Usertyp } from '../../users/domains/usertyp.entity';
 @Injectable()
 export class AuthService {
   constructor(
-    protected usersRepository: UsersRepository,
     protected hashPasswordService: HashPasswordService,
     protected tokenJwtService: TokenJwtService,
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
     protected emailSendService: EmailSendService,
     @InjectModel(SecurityDevice.name)
     private securityDeviceModel: Model<SecurityDeviceDocument>,
-    protected securityDeviceRepository: SecurityDeviceRepository,
-    protected usersSqlRepository: UsersSqlRepository,
-    protected securityDeviceSqlRepository: SecurityDeviceSqlRepository,
     protected userSqlTypeormRepository: UserSqlTypeormRepository,
     protected securityDeviceSqlTypeormRepository: SecurityDeviceSqlTypeormRepository,
   ) {}

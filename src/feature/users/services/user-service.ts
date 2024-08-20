@@ -1,7 +1,4 @@
-import { Model } from 'mongoose';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from '../domains/domain-user';
 import { CreateUserInputModel } from '../api/pipes/create-user-input-model';
 import { HashPasswordService } from '../../../common/service/hash-password-service';
 import { v4 as randomCode } from 'uuid';
@@ -10,25 +7,8 @@ import { UserSqlTypeormRepository } from '../repositories/user-sql-typeorm-repos
 import { Usertyp } from '../domains/usertyp.entity';
 
 @Injectable()
-/*@Injectable()-декоратор что данный клас
- инжектируемый--тобишь в него добавляются
- зависимости
- * ОБЯЗАТЕЛЬНО ДОБАВЛЯТЬ UsersService В ФАЙЛ app.module
- * providers: [AppService,UsersService]
- провайдер-это в том числе компонент котоый
- возможно внедрить как зависимость*/
 export class UsersService {
   constructor(
-    /* вот тут моделька втомчисле инжектится
-    именно декоратор  @InjectModel  определяет
-    что происходит инжектирование
-      -- (User.name)  регистрируется по имени
-       также как в   app.module  в  imports
-       и это будет скорей всего строка 'user'
-       --<UserDocument> это тип умного обьекта
-       ---userModel - это  свойство текущего класса ,
-       это будет ТОЖЕ КЛАСС-это и есть Моделька от mongoose.*/
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
     protected hashPasswordService: HashPasswordService,
     protected userSqlTypeormRepository: UserSqlTypeormRepository,
   ) {}
