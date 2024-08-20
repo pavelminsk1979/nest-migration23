@@ -27,7 +27,6 @@ import { AuthController } from './feature/auth/api/auth-controller';
 import { AuthService } from './feature/auth/services/auth-service';
 import { TokenJwtService } from './common/service/token-jwt-service';
 import { EmailSendService } from './common/service/email-send-service';
-import { CreatePostForBlogService } from './feature/blogs/services/create-post-for-blog-service';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration, { ConfigurationType } from './settings/env-configuration';
@@ -324,7 +323,6 @@ dotenv.config();
     AuthService,
     TokenJwtService,
     EmailSendService,
-    CreatePostForBlogService,
     CommentService,
     CommentRepository,
     AuthTokenGuard,
