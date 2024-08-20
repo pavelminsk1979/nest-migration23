@@ -11,7 +11,7 @@ import { QueryParamsInputModel } from '../../../common/pipes/query-params-input-
 import { LikeStatusForPostRepository } from '../../like-status-for-post/repositories/like-status-for-post-repository';
 import { LikeStatusForPostDocument } from '../../like-status-for-post/domain/domain-like-status-for-post';
 import { LikeStatus } from '../../../common/types';
-import { BlogRepository } from '../../blogs/repositories/blog-repository';
+import { BlogSqlTypeormRepository } from '../../blogs/repositories/blog-sql-typeorm-repository';
 
 @Injectable()
 /*@Injectable()-декоратор что данный клас
@@ -25,7 +25,7 @@ export class PostQueryRepository {
   constructor(
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     protected likeStatusForPostRepository: LikeStatusForPostRepository,
-    protected blogRepository: BlogRepository,
+    protected blogSqlTypeormRepository: BlogSqlTypeormRepository,
   ) {}
 
   async getPosts(
@@ -222,7 +222,7 @@ export class PostQueryRepository {
   ) {
     ///надо проверить существует ли такой blog
 
-    const blog = await this.blogRepository.findBlog(blogId);
+    const blog = await this.blogSqlTypeormRepository.getBlogByBlogId(blogId);
 
     if (!blog) return null;
 

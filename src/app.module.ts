@@ -6,9 +6,6 @@ import { UsersRepository } from './feature/users/repositories/user-repository';
 import { User, UserSchema } from './feature/users/domains/domain-user';
 import { UserQueryRepository } from './feature/users/repositories/user-query-repository';
 import { BlogController } from './feature/blogs/api/blog-controller';
-import { Blog, BlogShema } from './feature/blogs/domains/domain-blog';
-import { BlogRepository } from './feature/blogs/repositories/blog-repository';
-import { BlogQueryRepository } from './feature/blogs/repositories/blog-query-repository';
 import { Post, PostShema } from './feature/posts/domains/domain-post';
 import { PostRepository } from './feature/posts/repositories/post-repository';
 import { PostQueryRepository } from './feature/posts/repositories/post-query-repository';
@@ -288,7 +285,7 @@ dotenv.config();
         name: User.name,
         schema: UserSchema,
       },
-      { name: Blog.name, schema: BlogShema },
+
       { name: Post.name, schema: PostShema },
       { name: Comment.name, schema: CommentShema },
       { name: LikeStatusForPost.name, schema: LikeStatusForPostShema },
@@ -313,8 +310,6 @@ dotenv.config();
     UsersService,
     UsersRepository,
     UserQueryRepository,
-    BlogRepository,
-    BlogQueryRepository,
     PostRepository,
     PostQueryRepository,
     PostService,
