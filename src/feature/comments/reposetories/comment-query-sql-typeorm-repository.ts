@@ -1,7 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Comment, CommentDocument } from '../domaims/domain-comment';
 import { CommentWithLikeInfo } from '../types/views';
 import { QueryParamsInputModel } from '../../../common/pipes/query-params-input-model';
 import { LikeStatus } from '../../../common/types';
@@ -18,7 +15,6 @@ import { SortDir } from '../../blogs/api/types/dto';
 @Injectable()
 export class CommentQuerySqlTypeormRepository {
   constructor(
-    @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
     protected typLikeStatusForCommentSqlRepository: TypLikeStatusForCommentSqlRepository,
     protected postSqlTypeormRepository: PostSqlTypeormRepository,
     @InjectRepository(Commenttyp)

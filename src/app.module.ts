@@ -8,11 +8,6 @@ import { UserQueryRepository } from './feature/users/repositories/user-query-rep
 import { BlogController } from './feature/blogs/api/blog-controller';
 import { PostService } from './feature/posts/services/post-service';
 import { PostsController } from './feature/posts/api/post-controller';
-import { CommentQueryRepository } from './feature/comments/reposetories/comment-query-repository';
-import {
-  Comment,
-  CommentShema,
-} from './feature/comments/domaims/domain-comment';
 import { CommentController } from './feature/comments/api/comment-controller';
 import { TestController } from './feature/test/test-controller';
 import dotenv from 'dotenv';
@@ -25,7 +20,6 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration, { ConfigurationType } from './settings/env-configuration';
 import { CommentService } from './feature/comments/services/comment-service';
-import { CommentRepository } from './feature/comments/reposetories/comment-repository';
 import { AuthTokenGuard } from './common/guard/auth-token-guard';
 import {
   LikeStatusForPost,
@@ -60,8 +54,6 @@ import { SecurityDeviceSqlRepository } from './feature/security-device/repositor
 import { UserQuerySqlRepository } from './feature/users/repositories/user-query-sql-repository';
 import { SecurityDeviceSqlQueryRepository } from './feature/security-device/repositories/security-device-sql-query-repository';
 import { SaBlogController } from './feature/blogs/api/sa-blog-controller';
-import { CommentSqlRepository } from './feature/comments/reposetories/comment-sql-repository';
-import { CommentQuerySqlRepository } from './feature/comments/reposetories/comment-query-sql-repository';
 import { LikeStatusForCommentSqlRepository } from './feature/like-status-for-comment/repositories/like-status-for-comment-sql-repository';
 import { LikeStatusForPostSqlRepository } from './feature/like-status-for-post/repositories/like-status-for-post-sql-repository';
 import { Usertyp } from './feature/users/domains/usertyp.entity';
@@ -277,8 +269,6 @@ dotenv.config();
         name: User.name,
         schema: UserSchema,
       },
-
-      { name: Comment.name, schema: CommentShema },
       { name: LikeStatusForPost.name, schema: LikeStatusForPostShema },
       { name: LikeStatusForComment.name, schema: LikeStatusForCommentShema },
       { name: SecurityDevice.name, schema: SecurityDeviceShema },
@@ -302,13 +292,11 @@ dotenv.config();
     UsersRepository,
     UserQueryRepository,
     PostService,
-    CommentQueryRepository,
     HashPasswordService,
     AuthService,
     TokenJwtService,
     EmailSendService,
     CommentService,
-    CommentRepository,
     AuthTokenGuard,
     DataUserExtractorFromTokenGuard,
     LikeStatusForPostRepository,
@@ -324,8 +312,6 @@ dotenv.config();
     SecurityDeviceSqlRepository,
     UserQuerySqlRepository,
     SecurityDeviceSqlQueryRepository,
-    CommentSqlRepository,
-    CommentQuerySqlRepository,
     LikeStatusForCommentSqlRepository,
     LikeStatusForPostSqlRepository,
     UserSqlTypeormRepository,

@@ -1,16 +1,13 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Comment, CommentDocument } from '../domaims/domain-comment';
 import { LikeStatus } from '../../../common/types';
 import {
   LikeStatusForComment,
   LikeStatusForCommentDocument,
 } from '../../like-status-for-comment/domain/domain-like-status-for-comment';
 import { CreateCommentTyp } from '../api/types/dto';
-import { CommentSqlRepository } from '../reposetories/comment-sql-repository';
 import { LikeStatusForCommentCreateTyp } from '../../like-status-for-comment/types/dto';
-import { LikeStatusForCommentSqlRepository } from '../../like-status-for-comment/repositories/like-status-for-comment-sql-repository';
 import { PostSqlTypeormRepository } from '../../posts/repositories/post-sql-typeorm-repository';
 import { UserSqlTypeormRepository } from '../../users/repositories/user-sql-typeorm-repository';
 import { CommentSqlTypeormRepository } from '../reposetories/comment-sql-typeorm-repository';
@@ -28,11 +25,8 @@ import { TypLikeStatusForCommentSqlRepository } from '../../like-status-for-comm
  возможно внедрить как зависимость*/
 export class CommentService {
   constructor(
-    @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
     @InjectModel(LikeStatusForComment.name)
     private likeStatusModelForComment: Model<LikeStatusForCommentDocument>,
-    protected commentSqlRepository: CommentSqlRepository,
-    protected likeStatusForCommentSqlRepository: LikeStatusForCommentSqlRepository,
     protected postSqlTypeormRepository: PostSqlTypeormRepository,
     protected userSqlTypeormRepository: UserSqlTypeormRepository,
     protected commentSqlTypeormRepository: CommentSqlTypeormRepository,
