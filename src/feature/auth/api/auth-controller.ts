@@ -47,11 +47,6 @@ export class AuthController {
       await this.authService.loginUser(loginInputModel, request);
 
     if (result) {
-      /* { httpOnly: true, secure: true } - это опции для cookie:
-         httpOnly: true означает, что cookie будет доступно только для
-          HTTP-запросов, а не для JavaScript-скриптов на клиенте.
-         secure: true означает, что cookie будет передаваться только по
-          защищенному (HTTPS) соединению.*/
       response.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
         secure: true,
@@ -109,14 +104,6 @@ export class AuthController {
 
   @UseGuards(VisitLimitGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
-
-  /*  если подтверждение регистрации НЕ ПРИШЛО 
-    НА ПОЧТУ ... 
-     -на этот эндпоинт повторно придет емаил
-     -проверю что в базе isConfirmed ===false
-     -cтавлю новую дату протухания
-     --новый КОД
-     -заново отправляю письмо на почту*/
   @Post('registration-email-resending')
   async handleRegistrationEmailResending(
     @Body()
@@ -133,29 +120,12 @@ export class AuthController {
       throw new BadRequestException([
         { message: 'email already confirmed', field: 'email' },
       ]);
-      /*     throw new NotFoundException(
-             'email resending failed :andpoint-auth,url-auth/registration-email-resending',
-           );*/
     }
   }
 
   @UseGuards(VisitLimitGuard)
   /*1003 конспект- дошанка*/
   @HttpCode(HttpStatus.NO_CONTENT)
-  /*
-  предварительно должно  регистрация и registration-confirmation
-
-  -ЕСЛИ ЗАБЫЛ ПАРОЛЬ -МОЖНО ВОСТАНОВИТЬ
-  -эндпоинт ожидает email
-  -найдет юзера в базе
-  --установит новый КОД и дату протухания этого кода
-  -отправит этот КОД на почту
-  ---ДАЛЕЕ СМЫСЛ ТАКОЙ ЧТО ИЗ ПОЧТЫ КОД
-  ДОЛЖЕН ПОПАСТЬ НА ФРОНТЕНД А НА ФРОНТЕНДЕ
-  ДОБАВЯТ К КОДУ НОВЫЙ ПАРОЛЬ
-  И ОТПРАВИТСЯ ЭТА ПАРОЧКА НА ЭНДПОИНТ 'auth\new-password'
-  И ТОЛЬКО там сменится passwordHash в базе у Юзера
-   */
   @Post('password-recovery')
   async handlePasswordRecovery(
     @Body()
@@ -175,8 +145,6 @@ export class AuthController {
   }
 
   @UseGuards(VisitLimitGuard)
-  /*новый пароль... и в базу данных помещаю
-ХЭШНОВОГОПАРОЛЯ(passwordHash).  В теле запроса приходит КОД и новый пароль*/
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('new-password')
   async handleNewPassword(
@@ -208,17 +176,12 @@ export class AuthController {
       await this.authService.updateTokensForRequestRefreshToken(refreshToken);
 
     if (result) {
-      /* { httpOnly: true, secure: true } - это опции для cookie:
-         httpOnly: true означает, что cookie будет доступно только для
-          HTTP-запросов, а не для JavaScript-скриптов на клиенте.
-         secure: true означает, что cookie будет передаваться только по защищенному (HTTPS) соединению.*/
       response.cookie('refreshToken', result.newRefreshToken, {
         httpOnly: true,
         secure: true,
       });
       return { accessToken: result.newAccessToken };
     } else {
-      /* (401 Unauthorized). Это означает, что клиент не авторизован для доступа к запрашиваемому ресурсу*/
       throw new UnauthorizedException(
         "user didn't login:andpoint-post,url-auth/login",
       );
@@ -227,8 +190,6 @@ export class AuthController {
 
   @UseGuards(RefreshTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
-  /*удалить одну запись - один девайс 
-  из таблицы Securitydevicetyp*/
   @Post('logout')
   async handleLogout(@Req() request: Request) {
     const deviceId = request['deviceId'];

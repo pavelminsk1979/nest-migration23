@@ -28,23 +28,15 @@ export class AuthService {
   async loginUser(loginInputModel: LoginInputModel, request: Request) {
     const { loginOrEmail, password } = loginInputModel;
 
-    /*в базе должен быть документ
-    с приходящим емайлом или логином */
     const user: Usertyp | null =
       await this.userSqlTypeormRepository.findUserByLoginOrEmail(loginOrEmail);
 
     if (!user) return null;
 
-    /*когда USER В БАЗЕ СОЗДАН  тогда  ФЛАГ  FALSE и
-     * отправилось письмо на емайл для подтверждения емайла
-     * и если подтвердит тогда флаг isConfirmed  сменится на true
-     * и только потом можно ЗАЛОГИНИТСЯ */
     if (!user.isConfirmed) return null;
 
     const passwordHash = user.passwordHash;
 
-    /* делаю проверку-- на основании этого ли  пароля
-     был создан хэш который в данном документе находится */
     const isCorrectPassword = await this.hashPasswordService.checkPassword(
       password,
       passwordHash,
@@ -52,57 +44,20 @@ export class AuthService {
 
     if (!isCorrectPassword) return null;
 
-    /*--далее устанавливаю библиотеки для JwtToken
-     ---создаю tokenJwtServise
-     -- в env переменную положить секрет
-      ACCESSTOKEN_SECRET='12secret'*/
-
     const userId = user.id;
 
-    /* в токен айдишку юзера положу и в  также последней части токена
-    айдишка будет и  плюс секрет- они закодированые будут
-    и когда токен будет приходить на эндпоитнты - тогда айдишку из токена
-    сравню с айдишкой из этогоже токена НО ИЗ ЗАКОДИРОВАНОЙ
-     ЧАСТИ ИБО СЕКРЕТ ТОЛЬКО НА БЭКЕНДЕ --если они совпадают(айдишки)
-     значит можно обращатся на данный эндпоинт и ответ на данный
-     запрос надо отдавать на фронтенд
-      ТАКЖЕ УСТАНАВЛИВАЕТСЯ ВРЕМЯ ПРОТУХАНИЯ ТОКЕНА и также проверяется
-      одновременно с айдишкой-- протух токен или нет
-      ---в базу данных accessToken  не помещаентся
-      --в env файл помещаю СЕКРЕТ токена, можно еще время жизни*/
     const accessToken = await this.tokenJwtService.createAccessToken(userId);
 
     if (!accessToken) return null;
-
-    /*  МУЛЬТИДЕВАЙСНОСТЬ
-     один user может залогиниться на одном сайте
-     из своего телефона и плюс со своего ноутбука
-     -- логиниться будет одним и темже login and password
-     И НА РАЗНЫЙ УСТРОЙСТВА ПРИДУТ РАЗНЫЕ ПАРЫ
-     accessToken and refreshToken
-     ------ в базе надо создать коллекцию security-device*/
 
     const deviceId = randomCode();
 
     const { refreshToken, issuedAtRefreshToken } =
       await this.tokenJwtService.createRefreshToken(deviceId);
 
-    /*на каждый девайс в колекции отдельный документ
-     КОГДА АКСЕССТОКЕН протухнет тогда у рефрешТокена из самого
-     токена достану deviceId и issuedAtRefreshToken И В ЛУЧШЕМ
-     СЛУЧАЕ НАЙДУ ОДИН ДОКУМЕНТ В КОЛЕКЦИИ , и если документ есть то
-     создам новую пару Акцес и Рефреш Токенов
-     ---userId  надо чтоб АксессТокен создавать ведь надо
-     отдавать пару токенов на фронтенд*/
-
     const ip =
       (request.headers['x-forwarded-for'] as string) ||
       (request.socket.remoteAddress as string);
-
-    /*ip,nameDevice--- эти две сущности понадобятся
-     * потом-- а именно когда я на фронт буду отдавать
-     * информацию о всех девайсах для одного юзера
-     * get запрос на эндпоинт security/devices */
 
     const nameDevice = request.headers['user-agent'] || 'Some Device';
     const newSecurityDevice: Securitydevicetyp = {
@@ -125,10 +80,6 @@ export class AuthService {
 
   async registrationUser(registrationInputModel: RegistrationInputModel) {
     const { password, login, email } = registrationInputModel;
-
-    /*      login и email  должны быть уникальные--поискать
-        их в базе и если такие есть в базе то вернуть
-        на фронт ошибку */
 
     const isExistLogin =
       await this.userSqlTypeormRepository.isExistLogin(login);
@@ -163,25 +114,14 @@ export class AuthService {
       confirmationCode: randomCode(),
       isConfirmed: false,
       expirationDate: add(new Date(), { hours: 1, minutes: 2 }).toISOString(),
-      /*
-       expirationDate инициализируется значением, которое
-       рассчитывается с использованием функции add из библиотеки date-fns (или подобной библиотеки для работы с датами)
-       Функция add принимает два аргумента: дату и объект с настройками добавления времени. В данном случае, первый аргумент - это текущая дата, полученная с помощью new Date(), а второй аргумент - это объект с настройками { hours: 1, minutes: 2 }, который указывает, что нужно добавить 1 час и 2 минуты к текущей дате*/
     };
 
     const result = await this.userSqlTypeormRepository.createNewUser(newUser);
-
-    /* после того как в базе данных сущность уже создана
- ответ фронту покачто не отправляю
-   НАДО отправить письмо с кодом на емайл тому пользователю
-   который регистрируется сейчас
- Н*/
 
     const code = newUser.confirmationCode;
 
     const letter: string = this.emailSendService.createLetterRegistration(code);
 
-    /*лучше  обработать ошибку отправки письма*/
     try {
       await this.emailSendService.sendEmail(email, letter);
     } catch (error) {
@@ -205,15 +145,9 @@ export class AuthService {
 
     if (user.isConfirmed) return false;
 
-    /*надо проверку даты сделать что еще не протухла*/
-
     const expirationDate = new Date(user.expirationDate);
 
-    /*-далее получаю милисекунды даты которая в базе лежала */
-
     const expirationDateMilSek = expirationDate.getTime();
-
-    /*далее текущую дату и также милисекунды получаю */
 
     const currentDateMilSek = Date.now();
 
@@ -237,14 +171,11 @@ export class AuthService {
 
     if (user.isConfirmed) return false;
 
-    /*новая дата протухания и ее сразу помещаю в ЮЗЕРА
-    которого из базы достал*/
     user.expirationDate = add(new Date(), {
       hours: 1,
       minutes: 2,
     }).toISOString();
 
-    //новый код подтверждения
     const newCode = randomCode();
     user.confirmationCode = newCode;
 
@@ -269,8 +200,6 @@ export class AuthService {
     return isChangeUser;
   }
 
-  /* Востановление пароля через подтверждение по
-   электронной почте.*/
   async passwordRecovery(email: string) {
     const user = await this.userSqlTypeormRepository.findUserByEmail(email);
 
@@ -294,7 +223,6 @@ export class AuthService {
 
     const letter = this.emailSendService.createLetterRecoveryPassword(newCode);
 
-    /*лучше  обработать ошибку отправки письма*/
     try {
       await this.emailSendService.sendEmail(email, letter);
     } catch (error) {
@@ -331,11 +259,6 @@ export class AuthService {
   async updateTokensForRequestRefreshToken(refreshToken: string) {
     const result = await this.tokenJwtService.checkRefreshToken(refreshToken);
 
-    /*  из токена достал два значения и одновременно по двум этим значениям ищу в базе один документ ЕСЛИ ДОКУМЕНТ
-    НАШОЛСЯ то новую дату создания РЕФРЕШТОКЕНА надо в
-    найденый документ в базу записать
-    и два новых токена создаю и отдаю на фронт  */
-
     if (!result) return null;
 
     const { deviceId, issuedAtRefreshToken } = result;
@@ -360,10 +283,6 @@ export class AuthService {
     device.issuedAtRefreshToken = newIssuedAtRefreshToken;
 
     const newRefreshToken = newResultRefreshToken.refreshToken;
-
-    /*в базу данных сохраняю-ИЗМЕНЯЮ ДАТУ СОЗДАНИЯ РЕФРЕШТОКЕНА
-    ДЛЯ ДОКУМЕНТА С КОТОРЫМ УЖЕ РАБОТАЛ_КОТОРЫЙ УЖЕ СУЩЕСТВУЕТ
-    В БАЗЕ ДАННЫХ*/
 
     const isUpdateDevice: boolean =
       await this.securityDeviceSqlTypeormRepository.changeDevice(device);
