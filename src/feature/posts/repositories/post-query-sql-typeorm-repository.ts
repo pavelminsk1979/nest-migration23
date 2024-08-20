@@ -383,57 +383,6 @@ pagesCount это число
     };
   }
 
-  /*  async getPostById(postId: string, userId: string | null) {
-      /!* найду одну запись post по айдишке, плюс значение
-       * name из таблицы blog  И ДЛЯ ДАННОГО ПОСТА БУДЕТ
-       * СУЩЕСТВОВАТЬ ОДИН БЛОГ И У НЕГО ВОЗМУ ЕГО name ,
-       * это фронту надо инфу отдать  *!/
-  
-      const result = await this.dataSource.query(
-        `
-      select p.*,b.name
-      from public.post p
-      left join public.blog b
-      on p."blogId"=b.id
-      where p.id=$1
-      `,
-        [postId],
-      );
-  
-      if (result.length === 0) return null;
-  
-      const post: CreatePostWithIdAndWithNameBlog = result[0];
-  
-      /!* найду все записи из таблицы postlike
-       для текущего поста
-       ------сортировку по полю addedAt
-       -------- сортировка в убывающем порядке , это означает, что самая первая запись будет самой новой записью*!/
-  
-      const arrayPostLikeForOnePost: LikeStatusForPostWithId[] =
-        await this.dataSource.query(
-          `
-      SELECT *
-  FROM public.postlike plike
-  WHERE plike."postId"=$1
-   ORDER BY plike."addedAt" DESC   
-      `,
-          [postId],
-        );
-  
-      /!*в arrayPostLike будет  массив --- если не найдет запись ,
-     тогда ПУСТОЙ МАССИВ,   если найдет запись
-     тогда в массиве будетут  обьекты *!/
-  
-      const viewModelOnePostWithLikeInfo: PostWithLikesInfo =
-        this.createViewModelOnePostWithLikeInfo(
-          userId,
-          post,
-          arrayPostLikeForOnePost,
-        );
-  
-      return viewModelOnePostWithLikeInfo;
-    }*/
-
   createViewModelOnePostWithLikeInfo(
     userId: string | null,
     /* userId чтоб определить статус того 
