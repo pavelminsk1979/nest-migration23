@@ -1,5 +1,4 @@
-import { IsNotEmpty, IsString, Length, Validate } from 'class-validator';
-import { BlogExistsConstraint } from '../../../../common/validators/blog-exists-constraint';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class UpdatePostInputModel {
@@ -27,9 +26,5 @@ export class UpdatePostInputModel {
 
   @IsString()
   @IsNotEmpty()
-  /* соглашение по наименованию , принятое в class-validator.
- Суффикс Constraint указывает на то, что это кастомный валидатор.
- Префикс BlogExists описывает, что именно проверяет этот валидатор - существование блога.*/
-  @Validate(BlogExistsConstraint)
   blogId: string;
 }

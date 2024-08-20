@@ -19,7 +19,6 @@ import { CreateBlogInputModel } from './pipes/create-blog-input-model';
 import { CreatePostForBlogInputModel } from './pipes/create-post-for-blog-input-model';
 import { AuthGuard } from '../../../common/guard/auth-guard';
 import { QueryParamsInputModel } from '../../../common/pipes/query-params-input-model';
-import { BlogQuerySqlRepository } from '../repositories/blog-query-sql-repository';
 import { UpdatePostForCorrectBlogInputModel } from '../../posts/api/pipes/update-post-for-correct-blog-input-model';
 import { PostService } from '../../posts/services/post-service';
 import { BlogQuerySqlTypeormRepository } from '../repositories/blog-query-sql-typeorm-repository';
@@ -30,7 +29,6 @@ import { BlogService } from '../services/blog-service';
 @Controller('sa/blogs')
 export class SaBlogController {
   constructor(
-    protected blogQuerySqlRepository: BlogQuerySqlRepository,
     protected postService: PostService,
     protected blogQuerySqlTypeormRepository: BlogQuerySqlTypeormRepository,
     protected postQuerySqlTypeormRepository: PostQuerySqlTypeormRepository,
@@ -71,7 +69,7 @@ export class SaBlogController {
 
   @Get(':id')
   async getBlogById(@Param('id') bologId: string) {
-    const blog = await this.blogQuerySqlRepository.getBlogById(bologId);
+    const blog = await this.blogQuerySqlTypeormRepository.getBlogById(bologId);
 
     if (blog) {
       return blog;

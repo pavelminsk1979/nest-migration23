@@ -41,7 +41,6 @@ import {
 } from './feature/like-status-for-comment/domain/domain-like-status-for-comment';
 import { LikeStatusForCommentRepository } from './feature/like-status-for-comment/repositories/like-status-for-comment-repository';
 import { DataUserExtractorFromTokenGuard } from './common/guard/data-user-extractor-from-token-guard';
-import { BlogExistsConstraint } from './common/validators/blog-exists-constraint';
 import {
   SecurityDevice,
   SecurityDeviceShema,
@@ -63,8 +62,6 @@ import { UsersSqlRepository } from './feature/users/repositories/user-sql-reposi
 import { SecurityDeviceSqlRepository } from './feature/security-device/repositories/security-device-sql-repository';
 import { UserQuerySqlRepository } from './feature/users/repositories/user-query-sql-repository';
 import { SecurityDeviceSqlQueryRepository } from './feature/security-device/repositories/security-device-sql-query-repository';
-import { BlogSqlRepository } from './feature/blogs/repositories/blog-sql-repository';
-import { BlogQuerySqlRepository } from './feature/blogs/repositories/blog-query-sql-repository';
 import { PostSqlRepository } from './feature/posts/repositories/post-sql-repository';
 import { PostQuerySqlRepository } from './feature/posts/repositories/post-query-sql-repository';
 import { SaBlogController } from './feature/blogs/api/sa-blog-controller';
@@ -324,7 +321,6 @@ dotenv.config();
     DataUserExtractorFromTokenGuard,
     LikeStatusForPostRepository,
     LikeStatusForCommentRepository,
-    BlogExistsConstraint,
     SecurityDeviceRepository,
     RefreshTokenGuard,
     SecurityDeviceService,
@@ -336,8 +332,6 @@ dotenv.config();
     SecurityDeviceSqlRepository,
     UserQuerySqlRepository,
     SecurityDeviceSqlQueryRepository,
-    BlogSqlRepository,
-    BlogQuerySqlRepository,
     PostSqlRepository,
     PostQuerySqlRepository,
     CommentSqlRepository,

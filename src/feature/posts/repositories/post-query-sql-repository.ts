@@ -8,8 +8,8 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { NewestLikes, PostWithLikesInfo } from '../api/types/views';
 import { CreatePostWithIdAndWithNameBlog } from '../api/types/dto';
-import { BlogSqlRepository } from '../../blogs/repositories/blog-sql-repository';
 import { LikeStatusForPostWithId } from '../../like-status-for-post/types/dto';
+import { BlogSqlTypeormRepository } from '../../blogs/repositories/blog-sql-typeorm-repository';
 
 @Injectable()
 /*@Injectable()-декоратор что данный клас
@@ -23,7 +23,7 @@ export class PostQuerySqlRepository {
   constructor(
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     @InjectDataSource() protected dataSource: DataSource,
-    protected blogSqlRepository: BlogSqlRepository,
+    protected blogSqlTypeormRepository: BlogSqlTypeormRepository,
   ) {}
 
   async getPosts(
@@ -268,7 +268,7 @@ WHERE plike."postId" IN (${arrayPostId.map((id, idx) => `$${idx + 1}`).join(', '
   ) {
     ///надо проверить существует ли такой blog
 
-    const blog = await this.blogSqlRepository.findBlog(blogId);
+    const blog = await this.blogSqlTypeormRepository.getBlogByBlogId(blogId);
 
     if (!blog) return null;
 
